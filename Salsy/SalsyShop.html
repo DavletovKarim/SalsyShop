@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SalsyShop</title>
+    <style>
+        /* Основные стили */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: #ff4757;
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: #f1c40f;
+        }
+
+        main {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        section {
+            margin-bottom: 2.5rem;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        input, textarea, button {
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: 2rem;
+            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Стили для списка заказов */
+        #ordersList {
+            list-style: none;
+            padding: 0;
+        }
+
+        #ordersList li {
+            background-color: #ecf0f1;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #ordersList li.completed {
+            background-color: #d5f5e3;
+        }
+
+        #ordersList li button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #ordersList li button:hover {
+            background-color: #c0392b;
+        }
+
+        /* Стили для счетчика виртов */
+        #amountCounter {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #27ae60;
+        }
+
+        /* Стили для отзывов */
+        #approvedReviews {
+            margin-top: 1rem;
+        }
+
+        .review {
+            background-color: #ecf0f1;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #reviewForm textarea {
+            width: 100%;
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        #reviewsModerationList li {
+            background-color: #f8d7da;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Стили для кнопки "Отследить заказ" */
+        .trackButton {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.75rem 1.5rem;
+            background-color: #27ae60; /* Зеленый фон */
+            color: white; /* Белый текст */
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .trackButton:hover {
+            background-color: #219653; /* Темно-зеленый при наведении */
+        }
+
+        /* Адаптация для мобильных устройств */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            main {
+                padding: 1rem;
+            }
+
+            section {
+                padding: 1rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            input, textarea, button {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>SalsyShop</h1>
+        <nav>
+            <ul>
+                <li><a href="#order">Заказать</a></li>
+                <li><a href="#admin">Админ панель</a></li>
+                <li><a href="#track">Отследить заказ</a></li>
+                <li><a href="#reviews">Отзывы</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Форма заказа -->
+        <section id="order">
+            <h2>Заказать вирты</h2>
+            <p>Цена: <strong style="color: #27ae60;">35 руб. за 1 миллион</strong></p>
+            <p><strong>Заказ только от 10кк</strong></p>
+            <form id="orderForm">
+                <input type="text" id="telegram" placeholder="Ваш username в Telegram" required>
+                <input type="text" id="server" placeholder="Номер вашего сервера" required>
+                <input type="number" id="amount" placeholder="Количество виртов (от 10)" min="10" required>
+                <p id="amountCounter">Итоговая цена: 0 руб.</p>
+                <button type="submit">Отправить заявку</button>
+            </form>
+            <p id="orderMessage"></p>
+            <a id="trackButtonTop" href="#track" class="trackButton hidden">Отследить заказ</a>
+        </section>
+
+        <!-- Отслеживание заказа -->
+        <section id="track" class="hidden">
+            <h2>Отследить заказ</h2>
+            <form id="trackOrder">
+                <input type="text" id="orderId" placeholder="Введите ID заказа" required>
+                <button type="submit">Проверить статус</button>
+            </form>
+            <p id="orderStatus"></p>
+            <form id="reviewForm" class="hidden">
+                <h3>Оставить отзыв</h3>
+                <input type="text" id="reviewOrderId" placeholder="ID вашего заказа" required>
+                <textarea id="reviewText" placeholder="Ваш отзыв" required></textarea>
+                <button type="submit">Отправить отзыв</button>
+            </form>
+            <p id="reviewMessage"></p>
+        </section>
+
+        <!-- Отзывы -->
+        <section id="reviews" class="hidden">
+            <h2>Отзывы</h2>
+            <div id="approvedReviews">
+                <!-- Здесь будут отображаться одобренные отзывы -->
+            </div>
+        </section>
+
+        <!-- Админ-панель -->
+        <section id="admin" class="hidden">
+            <h2>Админ-панель</h2>
+            <form id="adminLoginForm">
+                <input type="text" id="adminUsername" placeholder="Логин" required>
+                <input type="password" id="adminPassword" placeholder="Пароль" required>
+                <button type="submit">Войти</button>
+            </form>
+            <div id="adminPanel" class="hidden">
+                <h3>Заказы</h3>
+                <ul id="ordersList"></ul>
+                <h3>Отзывы на модерации</h3>
+                <ul id="reviewsModerationList"></ul>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2023 SalsyShop. Все права защищены.</p>
+        <a id="trackButtonBottom" href="#track" class="trackButton hidden">Отследить заказ</a>
+    </footer>
+
+    <script>
+        // Моковые данные
+        let orders = [];
+        let reviews = [];
+        let isAdminLoggedIn = false;
+
+        // Элементы DOM
+        const orderForm = document.getElementById('orderForm');
+        const orderMessage = document.getElementById('orderMessage');
+        const trackButtonTop = document.getElementById('trackButtonTop');
+        const trackButtonBottom = document.getElementById('trackButtonBottom');
+        const trackOrderForm = document.getElementById('trackOrder');
+        const orderStatus = document.getElementById('orderStatus');
+        const adminLoginForm = document.getElementById('adminLoginForm');
+        const adminPanel = document.getElementById('adminPanel');
+        const ordersList = document.getElementById('ordersList');
+        const adminSection = document.getElementById('admin');
+        const amountInput = document.getElementById('amount');
+        const amountCounter = document.getElementById('amountCounter');
+        const reviewForm = document.getElementById('reviewForm');
+        const reviewMessage = document.getElementById('reviewMessage');
+        const approvedReviews = document.getElementById('approvedReviews');
+        const reviewsModerationList = document.getElementById('reviewsModerationList');
+        const trackSection = document.getElementById('track');
+        const reviewsSection = document.getElementById('reviews');
+
+        // Цена за 1 миллион виртов
+        const pricePerMillion = 35;
+
+        // Обновление счетчика цены
+        amountInput.addEventListener('input', () => {
+            const amount = parseInt(amountInput.value) || 0;
+            const totalPrice = amount * pricePerMillion;
+            amountCounter.textContent = `Итоговая цена: ${totalPrice.toFixed(2)} руб.`;
+        });
+
+        // Валидация Telegram username
+        function validateTelegramUsername(username) {
+            return /^@?[a-zA-Z0-9_]{5,}$/.test(username);
+        }
+
+        // Валидация номера сервера
+        function validateServerNumber(server) {
+            return /^\d+$/.test(server) && parseInt(server) > 0;
+        }
+
+        // Валидация количества виртов
+        function validateAmount(amount) {
+            return !isNaN(amount) && amount >= 10;
+        }
+
+        // Отправка заказа
+        orderForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const telegram = document.getElementById('telegram').value;
+            const server = document.getElementById('server').value;
+            const amount = parseInt(document.getElementById('amount').value);
+
+            if (!validateTelegramUsername(telegram)) {
+                orderMessage.textContent = '❌ Введите корректный Telegram username (начинается с @, минимум 5 символов).';
+                return;
+            }
+
+            if (!validateServerNumber(server)) {
+                orderMessage.textContent = '❌ Введите корректный номер сервера (только цифры).';
+                return;
+            }
+
+            if (!validateAmount(amount)) {
+                orderMessage.textContent = '❌ Минимальный заказ — 10 (10,000,000 виртов).';
+                return;
+            }
+
+            const order = {
+                id: Date.now(),
+                telegram,
+                server,
+                amount: amount * 1000000,
+                completed: false
+            };
+
+            orders.push(order);
+            orderMessage.textContent = `✅ Спасибо за заказ! Ваш ID заказа: ${order.id}. Используйте его для отслеживания статуса.`;
+            orderForm.reset();
+            amountCounter.textContent = 'Итоговая цена: 0 руб.';
+
+            trackButtonTop.classList.remove('hidden');
+            trackButtonBottom.classList.remove('hidden');
+            window.location.href = '#track';
+
+            if (isAdminLoggedIn) {
+                updateOrdersList();
+            }
+        });
+
+        // Отслеживание заказа
+        trackOrderForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const orderId = parseInt(document.getElementById('orderId').value);
+            const order = orders.find(order => order.id === orderId);
+
+            if (order) {
+                orderStatus.textContent = `Статус заказа #${order.id}: ${order.completed ? '✅ Выполнено' : '❌ В обработке'}`;
+                if (order.completed) {
+                    reviewForm.classList.remove('hidden');
+                } else {
+                    reviewMessage.textContent = '❌ Вы можете оставить отзыв только после выполнения заказа.';
+                }
+            } else {
+                orderStatus.textContent = '❌ Заказ не найден. Проверьте ID.';
+            }
+        });
+
+        // Отправка отзыва
+        reviewForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const orderId = parseInt(document.getElementById('reviewOrderId').value);
+            const reviewText = document.getElementById('reviewText').value;
+
+            const order = orders.find(order => order.id === orderId);
+            if (!order || !order.completed) {
+                reviewMessage.textContent = '❌ Заказ не найден или не выполнен.';
+                return;
+            }
+
+            const review = {
+                id: Date.now(),
+                orderId,
+                text: reviewText,
+                approved: false
+            };
+
+            reviews.push(review);
+            reviewMessage.textContent = '✅ Ваш отзыв отправлен на модерацию.';
+            reviewForm.reset();
+
+            if (isAdminLoggedIn) {
+                updateReviewsModerationList();
+            }
+        });
+
+        // Админ-авторизация
+        adminLoginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+
+            if (username === 'admin' && password === 'admin') {
+                isAdminLoggedIn = true;
+                adminPanel.classList.remove('hidden');
+                adminLoginForm.classList.add('hidden');
+                updateOrdersList();
+                updateReviewsModerationList();
+                updateApprovedReviews();
+            } else {
+                alert('Неверный логин или пароль!');
+            }
+        });
+
+        // Отметка заказа как выполненного
+        function completeOrder(orderId) {
+            const order = orders.find(order => order.id === orderId);
+            if (order) {
+                order.completed = true;
+                updateOrdersList();
+            }
+        }
+
+        // Удаление заказа
+        function deleteOrder(orderId) {
+            orders = orders.filter(order => order.id !== orderId);
+            updateOrdersList();
+        }
+
+        // Одобрение отзыва
+        function approveReview(reviewId) {
+            const review = reviews.find(review => review.id === reviewId);
+            if (review) {
+                review.approved = true;
+                updateReviewsModerationList();
+                updateApprovedReviews();
+            }
+        }
+
+        // Отклонение отзыва
+        function rejectReview(reviewId) {
+            reviews = reviews.filter(review => review.id !== reviewId);
+            updateReviewsModerationList();
+        }
+
+        // Обновление списка заказов
+        function updateOrdersList() {
+            ordersList.innerHTML = '';
+            orders.forEach(order => {
+                const li = document.createElement('li');
+                li.className = order.completed ? 'completed' : '';
+                li.innerHTML = `
+                    <div>
+                        <strong>Заказ #${order.id}</strong><br>
+                        Telegram: @${order.telegram}<br>
+                        Сервер: ${order.server}<br>
+                        Количество виртов: ${order.amount.toLocaleString()}<br>
+                        Статус: ${order.completed ? '✅ Выполнено' : '❌ В обработке'}
+                    </div>
+                    <div>
+                        <button onclick="completeOrder(${order.id})">Выполнено</button>
+                        <button onclick="deleteOrder(${order.id})">Удалить</button>
+                    </div>
+                `;
+                ordersList.appendChild(li);
+            });
+        }
+
+        // Обновление списка отзывов на модерации
+        function updateReviewsModerationList() {
+            reviewsModerationList.innerHTML = '';
+            reviews.filter(review => !review.approved).forEach(review => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <div>
+                        <strong>Отзыв #${review.id}</strong><br>
+                        Заказ #${review.orderId}<br>
+                        Текст: ${review.text}<br>
+                    </div>
+                    <div>
+                        <button onclick="approveReview(${review.id})">Одобрить</button>
+                        <button onclick="rejectReview(${review.id})">Отклонить</button>
+                    </div>
+                `;
+                reviewsModerationList.appendChild(li);
+            });
+        }
+
+        // Обновление списка одобренных отзывов
+        function updateApprovedReviews() {
+            approvedReviews.innerHTML = '';
+            reviews.filter(review => review.approved).forEach(review => {
+                const div = document.createElement('div');
+                div.className = 'review';
+                div.innerHTML = `
+                    <strong>Заказ #${review.orderId}</strong><br>
+                    <p>${review.text}</p>
+                `;
+                approvedReviews.appendChild(div);
+            });
+        }
+
+        // Показ разделов при нажатии на ссылки в навигации
+        document.querySelectorAll('nav ul li a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1); // Убираем # из href
+                const targetSection = document.getElementById(targetId);
+
+                // Скрываем все разделы
+                document.querySelectorAll('main section').forEach(section => {
+                    section.classList.add('hidden');
+                });
+
+                // Показываем целевой раздел
+                if (targetSection) {
+                    targetSection.classList.remove('hidden');
+                }
+            });
+        });
+
+        // Обработка кнопки "Отследить заказ"
+        document.getElementById('trackButtonTop').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.querySelectorAll('main section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            document.getElementById('track').classList.remove('hidden');
+        });
+
+        document.getElementById('trackButtonBottom').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.querySelectorAll('main section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            document.getElementById('track').classList.remove('hidden');
+        });
+    </script>
+</body>
+</html>
